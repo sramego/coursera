@@ -1,0 +1,19 @@
+(A) SELECT count(term) FROM Frequency WHERE docid = '10398_txt_earn';
+
+(B) SELECT count(term) FROM Frequency WHERE docid = '10398_txt_earn' AND count=1;
+
+(C) SELECT count() FROM (SELECT term FROM Frequency WHERE docid='10398_txt_earn' AND count=1 UNION SELECT term FROM Frequency WHERE docid='925_txt_trade' AND count=1);
+
+(D) SELECT count(distinct(docid)) FROM Frequency WHERE term='legal' OR term='law';
+
+(E) SELECT count(*) FROM (SELECT count(distinct(term)) AS term_count,docid FROM Frequency GROUP BY docid) WHERE term_count>300;
+
+(F) SELECT count(*) FROM (SELECT docid FROM Frequency WHERE term='transactions' INTERSECT SELECT docid FROM Frequency WHERE term='wORld');
+
+(G) SELECT a.row_num, b.col_num, SUM(a.value*b.value) FROM a, b WHERE a.col_num = b.row_num GROUP BY a.row_num, b.col_num;
+
+(H) SELECT SUM(a.count*b.count),a.docid,b.docid FROM Frequency a JOIN Frequency b ON b.term=a.term  WHERE (a.docid='10080_txt_crude' AND b.docid='17035_txt_earn') GROUP BY a.docid,b.docid;
+
+(I) CREATE VIEW TEMP AS SELECT docid,term,count FROM Frequency WHERE docid IN (SELECT docid FROM Frequency WHERE term='wAShington' intersect SELECT docid FROM Frequency WHERE term='taxes' intersect SELECT docid FROM Frequency WHERE term='treASury') AND (term='treASury' OR term='taxes' OR term='wAShington');
+
+SELECT SUM(a.count*b.count) AS value,a.docid,b.docid,a.term,b.term FROM TEMP a JOIN TEMP b ON b.term=a.term GROUP BY a.docid,b.docid ORder BY value;
